@@ -1,0 +1,29 @@
+<div class="search-overlay" id="search-overlay" data-search-overlay role="dialog" aria-modal="true" aria-label="Search">
+  <button type="button" class="search-overlay__close" data-search-close aria-label="Close search">Close</button>
+
+  <form action="{{ routes.search_url }}" method="get" class="search-overlay__form">
+    <input type="hidden" name="type" value="product">
+    <input
+      type="search"
+      name="q"
+      class="search-overlay__input"
+      placeholder="Search"
+      autocomplete="off"
+      data-search-input
+      aria-label="Search products"
+    >
+    <button type="submit" aria-label="Submit search">Enter</button>
+  </form>
+
+  <div class="search-overlay__popular">
+    <div class="search-overlay__popular-title">Popular</div>
+    <div class="search-overlay__popular-items">
+      <a href="/collections/all">New Arrivals</a>
+      <a href="/collections/all">Best Sellers</a>
+      <a href="/pages/custom-orders">Custom Orders</a>
+      <a href="/pages/gift-card">Gift Cards</a>
+    </div>
+  </div>
+
+  <div class="search-overlay__results" data-search-results aria-live="polite"></div>
+</div>

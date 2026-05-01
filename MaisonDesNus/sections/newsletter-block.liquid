@@ -1,0 +1,85 @@
+<section class="newsletter-block" aria-labelledby="nl-{{ section.id }}-title">
+  <div class="newsletter-block__inner">
+    {%- if section.settings.title != blank -%}
+      <h2 id="nl-{{ section.id }}-title" class="newsletter-block__title">{{ section.settings.title }}</h2>
+    {%- endif -%}
+    {%- if section.settings.body != blank -%}
+      <p class="newsletter-block__body">{{ section.settings.body }}</p>
+    {%- endif -%}
+
+    {%- form 'customer', id: 'newsletter-hero' -%}
+      <input type="hidden" name="contact[tags]" value="newsletter">
+      <div class="newsletter-block__form">
+        <input type="email" name="contact[email]" placeholder="Email" required aria-label="Email address">
+        <button type="submit">{{ section.settings.button_text | default: 'Enter' }}</button>
+      </div>
+    {%- endform -%}
+  </div>
+</section>
+
+{% stylesheet %}
+  .newsletter-block {
+    width: 100%;
+    padding: 80px var(--page-margin);
+    background: var(--color-background-alt);
+    text-align: center;
+  }
+  .newsletter-block__inner {
+    max-width: 520px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    align-items: center;
+  }
+  .newsletter-block__title {
+    font-size: clamp(22px, 3vw, 32px);
+  }
+  .newsletter-block__body {
+    font-size: var(--fs-body);
+    color: var(--color-muted);
+    max-width: 42ch;
+  }
+  .newsletter-block__form {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--color-foreground);
+    border-radius: var(--radius-pill);
+    padding: 0 4px 0 20px;
+    height: 38px;
+    width: 100%;
+    max-width: 360px;
+    margin-top: 8px;
+  }
+  .newsletter-block__form input[type="email"] {
+    flex: 1;
+    border: 0;
+    background: transparent;
+    outline: none;
+    font-family: var(--font-nav);
+    font-size: var(--fs-nav);
+    letter-spacing: var(--ls-nav);
+    text-transform: uppercase;
+    color: var(--color-foreground);
+    min-width: 0;
+  }
+  .newsletter-block__form button {
+    padding: 6px 14px;
+    font-family: var(--font-nav);
+    font-size: var(--fs-nav);
+    letter-spacing: var(--ls-nav);
+    text-transform: uppercase;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Newsletter Block",
+  "settings": [
+    { "type": "text", "id": "title", "label": "Title", "default": "Newsletter" },
+    { "type": "textarea", "id": "body", "label": "Body", "default": "Sign up for updates on new arrivals and editorials." },
+    { "type": "text", "id": "button_text", "label": "Button", "default": "Enter" }
+  ],
+  "presets": [{ "name": "Newsletter Block" }]
+}
+{% endschema %}

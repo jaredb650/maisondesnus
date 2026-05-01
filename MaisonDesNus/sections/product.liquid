@@ -1,0 +1,537 @@
+{%- liquid
+  assign current_variant = product.selected_or_first_available_variant
+  assign on_sale = false
+  if product.compare_at_price > product.price
+    assign on_sale = true
+  endif
+  assign is_new = false
+  if product.tags contains 'new'
+    assign is_new = true
+  endif
+  assign is_final = false
+  if product.tags contains 'final-few' or product.tags contains 'final few'
+    assign is_final = true
+  endif
+
+  assign materials_text = product.metafields.custom.materials | default: '100% Cotton Canvas'
+  assign care_text = product.metafields.custom.care | default: 'Spot clean with a damp cloth or hand wash cool. Lay flat to dry.'
+  assign made_in_text = product.metafields.custom.made_in | default: 'New York'
+  assign size_fit_text = product.metafields.custom.size_fit
+-%}
+
+<article class="product-page">
+
+  {%- comment -%} Full-width breadcrumbs {%- endcomment -%}
+  <nav class="product-page__breadcrumbs" aria-label="Breadcrumb">
+    <a href="{{ routes.root_url }}">Home</a>
+    <span class="product-page__breadcrumbs-sep">&gt;</span>
+    <span class="font-italic">{{ product.title }}</span>
+  </nav>
+
+  <div class="product-page__grid">
+
+    {%- comment -%} === LEFT column: sticky meta === {%- endcomment -%}
+    <aside class="product-page__col product-page__col--left">
+      <div class="product-page__sticky">
+        <div class="info-row">
+          <span class="info-row__label">Materials</span>
+          <div class="info-row__value">{{ materials_text }}</div>
+        </div>
+        <div class="info-row">
+          <span class="info-row__label">Care</span>
+          <div class="info-row__value">{{ care_text }}</div>
+        </div>
+        <div class="info-row">
+          <span class="info-row__label">Made In</span>
+          <div class="info-row__value">{{ made_in_text }}</div>
+        </div>
+      </div>
+    </aside>
+
+    {%- comment -%} === CENTER column: scrolling image stack === {%- endcomment -%}
+    <div class="product-page__col product-page__col--center" data-product-gallery>
+      {%- if product.images.size > 0 -%}
+        {%- for image in product.images -%}
+          <img
+            src="{{ image | image_url: width: 1400 }}"
+            data-zoom-src="{{ image | image_url: width: 2400 }}"
+            data-zoom-image
+            class="product-page__gallery-image"
+            loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+            fetchpriority="{% if forloop.first %}high{% else %}auto{% endif %}"
+            alt="{{ image.alt | escape | default: product.title }}"
+            width="1400" height="1750"
+          >
+        {%- endfor -%}
+      {%- else -%}
+        <div class="product-page__gallery-image product-page__gallery-placeholder"></div>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} === RIGHT column: sticky info + form === {%- endcomment -%}
+    <aside class="product-page__col product-page__col--right">
+      <div class="product-page__sticky">
+        <div class="info-row">
+          <span class="info-row__label">Item ID</span>
+          <h1 class="info-row__value product-page__title font-italic">{{ product.title }}</h1>
+        </div>
+
+        {%- if product.description != blank -%}
+          <div class="info-row">
+            <span class="info-row__label">Description</span>
+            <div class="info-row__value product-page__description">{{ product.description }}</div>
+          </div>
+        {%- endif -%}
+
+        {%- form 'product', product, data-product-form: true, class: 'product-page__form' -%}
+          <input type="hidden" name="id" value="{{ current_variant.id }}" data-variant-id>
+
+          {%- for option in product.options_with_values -%}
+            {%- assign lower_name = option.name | downcase -%}
+            <div class="info-row variant-row" data-variant-group>
+              <span class="info-row__label">{{ option.name }}</span>
+              <div class="info-row__value">
+                <div class="variant-selector__selected" data-variant-selected>{{ option.selected_value }}</div>
+                <div class="variant-selector__options {% if lower_name contains 'color' or lower_name contains 'colour' %}variant-selector__swatches{% endif %}">
+                  {%- for value in option.values -%}
+                    {%- if lower_name contains 'color' or lower_name contains 'colour' -%}
+                      <button type="button"
+                              class="variant-selector__swatch {% if option.selected_value == value %}is-active{% endif %}"
+                              style="background-color: {{ value | handleize }};"
+                              data-value="{{ value }}"
+                              aria-label="{{ value }}"></button>
+                    {%- else -%}
+                      <button type="button"
+                              class="variant-selector__option {% if option.selected_value == value %}is-active{% endif %}"
+                              data-value="{{ value }}">{{ value }}</button>
+                    {%- endif -%}
+                  {%- endfor -%}
+                </div>
+              </div>
+            </div>
+          {%- endfor -%}
+
+          <div class="info-row">
+            <span class="info-row__label">Price</span>
+            <div class="info-row__value">
+              <div class="product-page__price {% if on_sale %}product-page__price--sale{% endif %}" data-product-price>
+                {%- if on_sale -%}<s>{{ product.compare_at_price | money }}</s> {%- endif -%}
+                {{ product.price | money }}
+              </div>
+              <div class="product-page__afterpay">Monthly payments available at checkout with Afterpay</div>
+            </div>
+          </div>
+
+          <div class="product-page__cta-row">
+            <button type="submit" class="btn btn--primary btn--pill product-page__atc" {% unless current_variant.available %}disabled{% endunless %} data-atc-btn>
+              {%- if current_variant.available -%}
+                {%- if product.tags contains 'pre-order' -%}Pre-Order{%- else -%}Add to Cart{%- endif -%}
+              {%- else -%}
+                Sold Out
+              {%- endif -%}
+            </button>
+          </div>
+        {%- endform -%}
+
+        <div class="info-row">
+          <span class="info-row__label">Details</span>
+          <div class="info-row__value">
+            <details class="product-page__details">
+              <summary>Size &amp; Fit <span class="caret" aria-hidden="true">⌄</span></summary>
+              <div class="product-page__details-body">
+                {%- if size_fit_text != blank -%}
+                  {{ size_fit_text }}
+                {%- else -%}
+                  <p>Model is 5'10" / 178cm, wearing size Small.</p>
+                  <p>This style runs true to size. Order your usual size, or size up for a relaxed fit.</p>
+                {%- endif -%}
+              </div>
+            </details>
+            <details class="product-page__details">
+              <summary>Shipping &amp; Returns <span class="caret" aria-hidden="true">⌄</span></summary>
+              <div class="product-page__details-body">
+                <p>Complimentary shipping on orders over $150. Standard shipping $5 flat.</p>
+                <p>Exchanges within 14 days for sizing. All sales final on sale and custom items.</p>
+              </div>
+            </details>
+          </div>
+        </div>
+
+        {%- if section.settings.show_recommendations -%}
+          {%- assign rec_collection = product.collections.first -%}
+          {%- if rec_collection -%}
+            <div class="info-row info-row--styled-with">
+              <span class="info-row__label">Styled With</span>
+              <div class="info-row__value styled-with-grid">
+                {%- assign rec_count = 0 -%}
+                {%- for rec in rec_collection.products -%}
+                  {%- if rec.id != product.id and rec_count < 2 -%}
+                    <a href="{{ rec.url }}" class="styled-with-card">
+                      {%- if rec.featured_image -%}
+                        {{ rec.featured_image | image_url: width: 400 | image_tag:
+                            widths: '200,300,400',
+                            sizes: '180px',
+                            loading: 'lazy',
+                            alt: rec.title | escape }}
+                      {%- endif -%}
+                      <span class="styled-with-card__title font-italic">{{ rec.title }}</span>
+                    </a>
+                    {%- assign rec_count = rec_count | plus: 1 -%}
+                  {%- endif -%}
+                {%- endfor -%}
+              </div>
+            </div>
+          {%- endif -%}
+        {%- endif -%}
+      </div>
+    </aside>
+  </div>
+</article>
+
+{%- comment -%} === You Might Also Like === {%- endcomment -%}
+{%- if section.settings.show_related -%}
+  {%- assign rec_source = product.collections.first -%}
+  {%- if rec_source and rec_source.products.size > 1 -%}
+    <section class="product-related" aria-labelledby="related-heading">
+      <h2 id="related-heading" class="product-related__heading font-italic">You May Also Like</h2>
+      <div class="product-related__grid">
+        {%- assign shown = 0 -%}
+        {%- for rec in rec_source.products -%}
+          {%- if rec.id != product.id and shown < 3 -%}
+            {%- render 'product-card', product: rec -%}
+            {%- assign shown = shown | plus: 1 -%}
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </section>
+  {%- endif -%}
+{%- endif -%}
+
+{%- comment -%} === Reviews scaffold === {%- endcomment -%}
+{%- if section.settings.show_reviews -%}
+  <section class="product-reviews" aria-labelledby="reviews-heading" data-product-reviews data-product-id="{{ product.id }}">
+    <h2 id="reviews-heading" class="product-reviews__heading font-italic">Reviews</h2>
+    <div class="product-reviews__body">
+      {%- comment -%}
+        Injection point for reviews app (Judge.me, Shopify Product Reviews, Yotpo, etc.)
+        Replace the empty state below with the app's snippet or block when the client picks one.
+      {%- endcomment -%}
+      <p class="product-reviews__empty">No reviews yet. Be the first to share your thoughts.</p>
+      <a href="#" class="product-reviews__cta link-underline">Write a review</a>
+    </div>
+  </section>
+{%- endif -%}
+
+{%- comment -%} Product JSON-LD {%- endcomment -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org/",
+  "@type": "Product",
+  "name": {{ product.title | json }},
+  "description": {{ product.description | strip_html | json }},
+  "image": [{% for image in product.images %}"{{ image | image_url: width: 1200 }}"{% unless forloop.last %},{% endunless %}{% endfor %}],
+  "sku": {{ current_variant.sku | json }},
+  "brand": { "@type": "Brand", "name": "Maison des Nus" },
+  "offers": {
+    "@type": "Offer",
+    "price": {{ current_variant.price | divided_by: 100.0 }},
+    "priceCurrency": {{ cart.currency.iso_code | json }},
+    "availability": "{% if current_variant.available %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}",
+    "url": "{{ shop.url }}{{ product.url }}"
+  }
+}
+</script>
+
+{% stylesheet %}
+  .product-page {
+    width: 100%;
+    padding: 24px var(--page-margin) 96px;
+  }
+
+  .product-page__breadcrumbs {
+    font-size: var(--fs-body-sm);
+    padding-bottom: 32px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .product-page__breadcrumbs a { color: var(--color-foreground); }
+  .product-page__breadcrumbs-sep { color: var(--color-muted); }
+
+  .product-page__grid {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: stretch;
+  }
+  .product-page__col {
+    flex: 0 0 33.3333%;
+    max-width: 33.3333%;
+    min-width: 0;
+  }
+  .product-page__col--left { padding-right: 24px; order: 1; }
+  .product-page__col--center { order: 2; display: flex; flex-direction: column; gap: 8px; }
+  .product-page__col--right { padding-left: 24px; order: 3; }
+
+  .product-page__sticky {
+    position: sticky;
+    top: calc(var(--header-height) + 24px);
+  }
+
+  /* ---- Labeled row pattern ---- */
+  .info-row {
+    display: grid;
+    grid-template-columns: 72px 1fr;
+    gap: 14px;
+    align-items: start;
+    padding: 8px 0;
+  }
+  .info-row__label {
+    font-family: var(--font-nav);
+    font-size: var(--fs-label);
+    font-weight: 500;
+    letter-spacing: var(--ls-label);
+    text-transform: uppercase;
+    color: var(--color-foreground);
+    padding-top: 2px;
+  }
+  .info-row__value {
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+  }
+
+  /* ---- Center column ---- */
+  .product-page__gallery-image {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    background-color: var(--color-background-alt);
+  }
+  .product-page__gallery-placeholder {
+    display: block;
+    background: var(--color-surface);
+  }
+
+  /* ---- Right column ---- */
+  .product-page__title {
+    font-size: 16px;
+    line-height: 1.1;
+  }
+  .product-page__description p + p { margin-top: 8px; }
+
+  /* ---- Variant selectors ---- */
+  .variant-selector__selected {
+    font-weight: 500;
+    letter-spacing: var(--ls-nav);
+    text-transform: uppercase;
+    font-family: var(--font-nav);
+    font-size: var(--fs-nav);
+    margin-bottom: 6px;
+  }
+  .variant-selector__options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+  .variant-selector__option {
+    padding: 2px 0;
+    border: 0;
+    background: transparent;
+    font-family: var(--font-nav);
+    font-size: var(--fs-nav);
+    letter-spacing: var(--ls-nav);
+    text-transform: uppercase;
+    color: var(--color-muted);
+    cursor: pointer;
+    position: relative;
+  }
+  .variant-selector__option::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -2px;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transition: transform var(--transition-fast);
+  }
+  .variant-selector__option:hover { color: var(--color-foreground); }
+  .variant-selector__option.is-active {
+    color: var(--color-foreground);
+    font-weight: 600;
+  }
+  .variant-selector__option.is-active::after { transform: scaleX(1); }
+  .variant-selector__swatches { gap: 10px; }
+  .variant-selector__swatch {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1px solid var(--color-border);
+    cursor: pointer;
+    padding: 0;
+    position: relative;
+  }
+  .variant-selector__swatch.is-active {
+    outline: 1px solid var(--color-foreground);
+    outline-offset: 2px;
+  }
+
+  /* ---- Price ---- */
+  .product-page__price {
+    font-family: var(--font-italic);
+    font-style: italic;
+    font-size: 16px;
+    line-height: 1;
+  }
+  .product-page__price s {
+    color: var(--color-muted);
+    margin-right: 8px;
+    font-size: 12px;
+  }
+  .product-page__afterpay {
+    font-size: 10px;
+    color: var(--color-muted);
+    margin-top: 4px;
+  }
+
+  /* ---- Add to cart ---- */
+  .product-page__cta-row {
+    padding: 14px 0;
+  }
+  .product-page__atc {
+    width: 100%;
+    padding: 12px 24px;
+    font-size: var(--fs-nav);
+  }
+  .product-page__atc[disabled] { opacity: 0.5; cursor: not-allowed; }
+
+  /* ---- Details accordion ---- */
+  .product-page__details {
+    padding: 8px 0;
+  }
+  .product-page__details summary {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--font-italic);
+    font-style: italic;
+    font-size: 12px;
+  }
+  .product-page__details summary::-webkit-details-marker { display: none; }
+  .product-page__details .caret {
+    font-size: 11px;
+    transition: transform var(--transition-fast);
+  }
+  .product-page__details[open] .caret { transform: rotate(180deg); }
+  .product-page__details-body {
+    padding: 8px 0 4px;
+    font-size: var(--fs-body);
+  }
+  .product-page__details-body p + p { margin-top: 6px; }
+
+  /* ---- Styled With ---- */
+  .info-row--styled-with { align-items: start; }
+  .styled-with-grid {
+    display: flex;
+    gap: 12px;
+  }
+  .styled-with-card {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+  }
+  .styled-with-card img {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    background: var(--color-background-alt);
+  }
+  .styled-with-card__title {
+    font-size: 12px;
+  }
+
+  /* ---- You May Also Like ---- */
+  .product-related {
+    padding: 64px var(--page-margin) 48px;
+  }
+  .product-related__heading {
+    font-size: 18px;
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  .product-related__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--grid-gap);
+  }
+  @media (max-width: 899px) {
+    .product-related__grid { grid-template-columns: repeat(2, 1fr); }
+    .product-related { padding: 48px var(--page-margin) 32px; }
+  }
+
+  /* ---- Reviews scaffold ---- */
+  .product-reviews {
+    padding: 48px var(--page-margin) 64px;
+    max-width: 720px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .product-reviews__heading {
+    font-size: 18px;
+    margin-bottom: 20px;
+  }
+  .product-reviews__body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+  }
+  .product-reviews__empty {
+    font-size: var(--fs-body);
+    color: var(--color-muted);
+  }
+  .product-reviews__cta {
+    font-family: var(--font-nav);
+    font-size: var(--fs-nav);
+    letter-spacing: var(--ls-nav);
+    text-transform: uppercase;
+  }
+
+  /* ---- Responsive ---- */
+  @media (max-width: 1023px) {
+    .product-page__col {
+      flex: 0 0 100%;
+      max-width: 100%;
+      padding: 0;
+    }
+    .product-page__col--left { order: 3; }
+    .product-page__col--center { order: 1; margin-bottom: 24px; }
+    .product-page__col--right { order: 2; margin-bottom: 24px; }
+    .product-page__sticky { position: static; }
+  }
+  @media (max-width: 899px) {
+    .info-row { grid-template-columns: 90px 1fr; gap: 12px; }
+  }
+  @media (max-width: 599px) {
+    .info-row {
+      grid-template-columns: 1fr;
+      gap: 4px;
+    }
+    .product-page__title { font-size: 18px; }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Product",
+  "settings": [
+    { "type": "checkbox", "id": "show_recommendations", "label": "Show Styled With (inline cross-sell)", "default": true },
+    { "type": "checkbox", "id": "show_related", "label": "Show You Might Also Like", "default": true },
+    { "type": "checkbox", "id": "show_reviews", "label": "Show Reviews section", "default": false, "info": "Enable once a reviews app is connected." }
+  ],
+  "disabled_on": { "groups": ["header", "footer"] }
+}
+{% endschema %}

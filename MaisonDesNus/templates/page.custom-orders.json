@@ -1,0 +1,17 @@
+{
+  "sections": {
+    "hero": {
+      "type": "page-hero",
+      "settings": {
+        "title": "Custom Orders",
+        "body": "<p>Submit a request below. We'll respond with a quote and lead time.</p>",
+        "narrow": true
+      }
+    },
+    "form": {
+      "type": "custom-order-form",
+      "settings": {}
+    }
+  },
+  "order": ["hero", "form"]
+}

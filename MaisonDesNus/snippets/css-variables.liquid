@@ -1,0 +1,73 @@
+{% style %}
+  :root {
+    /* ==== Typography ====
+       Body/nav: Helvetica Neue stack (stand-in for licensed sans until client provides).
+       Display/italic: EB Garamond (free stand-in for italic serif on product titles + breadcrumbs). */
+    --font-body: 'Helvetica Neue', Arial, 'Lucida Grande', sans-serif;
+    --font-nav: 'Helvetica Neue', Arial, 'Lucida Grande', sans-serif;
+    --font-italic: 'EB Garamond', 'Times New Roman', Georgia, serif;
+
+    /* ==== Type scale ==== */
+    --fs-nav: 10px;
+    --fs-label: 9px;
+    --fs-body: 11px;
+    --fs-body-sm: 10px;
+    --fs-h3: 13px;
+    --fs-h2: 16px;
+    --fs-h1: 18px;
+    --lh-tight: 1.15;
+    --lh-body: 1.5;
+    --ls-nav: 0.04em;
+    --ls-label: 0.08em;
+
+    /* ==== Palette — neutrals only ====
+       Matches reference computed values exactly: warm cream bg + warm near-black fg.
+       No color accents. */
+    --color-background: #FCFBF5;
+    --color-background-alt: #F7F3EC;
+    --color-foreground: #241E16;
+    --color-foreground-soft: #4A4238;
+    --color-muted: #857C70;
+    --color-border: #E0DBD0;
+    --color-border-dark: #C4B89E;
+    --color-border-strong: #241E16;
+    --color-surface: #F0EADD;
+    --color-white: #FFFFFF;
+    --color-black: #000000;
+
+    /* ==== Overlays ==== */
+    --color-overlay-dark: rgba(26, 22, 19, 0.55);
+    --color-overlay-light: rgba(252, 251, 245, 0.7);
+    --color-shadow-soft: 0 2px 20px rgba(26, 22, 19, 0.06);
+
+    /* ==== Layout ==== */
+    --page-width: 1480px;
+    --page-margin: 16px;
+    --header-height: 87px;
+    --announcement-height: 32px;
+    --section-spacing: 64px;
+    --grid-gap: 2px;
+
+    /* ==== Motion — minimal, reference uses subtle fades only ==== */
+    --transition-fast: 0.18s ease;
+    --transition-base: 0.32s ease;
+
+    /* ==== Radii ==== */
+    --radius-sm: 0;
+    --radius-md: 2px;
+    --radius-pill: 999px;
+  }
+
+  @media (min-width: 768px) {
+    :root {
+      --page-margin: 24px;
+      --section-spacing: 96px;
+    }
+  }
+  @media (min-width: 1200px) {
+    :root {
+      --page-margin: 32px;
+      --section-spacing: 120px;
+    }
+  }
+{% endstyle %}

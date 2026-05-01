@@ -1,0 +1,287 @@
+{%- paginate collection.products by 24 -%}
+<div class="collection">
+  {%- comment -%} Inline horizontal filter bar {%- endcomment -%}
+  <div class="filter-bar" data-filter-bar>
+    <form class="filter-bar__filters" method="get">
+      <span class="filter-bar__label">Filter:</span>
+      {%- for filter in collection.filters -%}
+        <details class="filter-dropdown" data-filter-dropdown>
+          <summary class="filter-dropdown__summary">
+            <span>{{ filter.label }}</span>
+            <span class="caret" aria-hidden="true">⌄</span>
+          </summary>
+          <div class="filter-dropdown__panel">
+            {%- case filter.type -%}
+              {%- when 'list' -%}
+                {%- for value in filter.values -%}
+                  <label class="filter-option">
+                    <input type="checkbox"
+                      name="{{ value.param_name }}"
+                      value="{{ value.value }}"
+                      {% if value.active %}checked{% endif %}
+                      {% if value.count == 0 and value.active == false %}disabled{% endif %}
+                      onchange="this.form.submit()">
+                    <span class="filter-option__label">{{ value.label }}</span>
+                    <span class="filter-option__count">({{ value.count }})</span>
+                  </label>
+                {%- endfor -%}
+              {%- when 'price_range' -%}
+                <div class="filter-price">
+                  <input type="number" name="{{ filter.min_value.param_name }}" placeholder="Min" value="{{ filter.min_value.value | money_without_currency }}" min="0">
+                  <span>—</span>
+                  <input type="number" name="{{ filter.max_value.param_name }}" placeholder="Max" value="{{ filter.max_value.value | money_without_currency }}" min="0">
+                  <button type="submit">Apply</button>
+                </div>
+            {%- endcase -%}
+          </div>
+        </details>
+      {%- endfor -%}
+    </form>
+
+    <form class="filter-bar__sort" method="get">
+      <label for="sort-by" class="filter-bar__label">Sort by:</label>
+      <select id="sort-by" name="sort_by" onchange="this.form.submit()">
+        {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+        {%- for option in collection.sort_options -%}
+          <option value="{{ option.value }}" {% if option.value == sort_by %}selected{% endif %}>{{ option.name }}</option>
+        {%- endfor -%}
+      </select>
+    </form>
+  </div>
+
+  {%- comment -%} Active filter breadcrumbs {%- endcomment -%}
+  {%- assign has_active = false -%}
+  {%- for filter in collection.filters -%}
+    {%- if filter.active_values.size > 0 -%}{%- assign has_active = true -%}{%- break -%}{%- endif -%}
+  {%- endfor -%}
+  {%- if has_active -%}
+    <div class="active-filters">
+      {%- for filter in collection.filters -%}
+        {%- for value in filter.active_values -%}
+          <a href="{{ value.url_to_remove }}" class="active-filter">
+            <span>{{ value.label }}</span>
+            <span aria-hidden="true">×</span>
+          </a>
+        {%- endfor -%}
+      {%- endfor -%}
+      <a href="{{ collection.url }}" class="active-filter active-filter--clear">Clear All</a>
+    </div>
+  {%- endif -%}
+
+  {%- comment -%} Product grid {%- endcomment -%}
+  <div class="product-grid">
+    {%- if collection.products.size > 0 -%}
+      {%- for product in collection.products -%}
+        {%- render 'product-card', product: product -%}
+      {%- endfor -%}
+    {%- else -%}
+      <div class="product-grid__empty">
+        <p class="font-italic">Nothing here.</p>
+        <p>Try a different filter, or <a href="/collections/all" class="link-underline">browse everything</a>.</p>
+      </div>
+    {%- endif -%}
+  </div>
+
+  {%- if paginate.pages > 1 -%}
+    <nav class="collection__pagination" aria-label="Pagination">
+      {{ paginate | default_pagination }}
+    </nav>
+  {%- endif -%}
+</div>
+{%- endpaginate -%}
+
+{% stylesheet %}
+  .collection {
+    width: 100%;
+    padding: 0;
+  }
+
+  /* ---- Filter bar ---- */
+  .filter-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+    padding: 18px var(--page-margin);
+    border-bottom: 1px solid var(--color-border);
+    font-family: var(--font-nav);
+    font-size: var(--fs-nav);
+    letter-spacing: var(--ls-nav);
+    text-transform: uppercase;
+    flex-wrap: wrap;
+  }
+  .filter-bar__filters {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .filter-bar__label {
+    font-weight: 500;
+    color: var(--color-foreground);
+  }
+  .filter-bar__sort {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .filter-bar__sort select {
+    border: 0;
+    background: transparent;
+    font: inherit;
+    letter-spacing: inherit;
+    text-transform: inherit;
+    cursor: pointer;
+    padding: 0;
+    appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, currentColor 50%),
+                      linear-gradient(-45deg, transparent 50%, currentColor 50%);
+    background-position: calc(100% - 11px) 55%, calc(100% - 6px) 55%;
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+    padding-right: 22px;
+  }
+
+  /* ---- Filter dropdowns ---- */
+  .filter-dropdown {
+    position: relative;
+  }
+  .filter-dropdown__summary {
+    list-style: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    user-select: none;
+  }
+  .filter-dropdown__summary::-webkit-details-marker { display: none; }
+  .filter-dropdown__summary .caret {
+    font-size: 10px;
+    transform: translateY(-1px);
+    transition: transform var(--transition-fast);
+  }
+  .filter-dropdown[open] .filter-dropdown__summary .caret { transform: translateY(-1px) rotate(180deg); }
+  .filter-dropdown__panel {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 14px;
+    min-width: 220px;
+    max-height: 320px;
+    overflow-y: auto;
+    background: var(--color-background);
+    border: 1px solid var(--color-border);
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 20;
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: var(--fs-body-sm);
+  }
+
+  .filter-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+  }
+  .filter-option input[disabled] + .filter-option__label {
+    color: var(--color-muted);
+    text-decoration: line-through;
+  }
+  .filter-option__count { color: var(--color-muted); }
+
+  .filter-price {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .filter-price input[type="number"] {
+    width: 80px;
+    border: 1px solid var(--color-border);
+    background: var(--color-background);
+    padding: 6px 8px;
+    font: inherit;
+    font-size: var(--fs-body-sm);
+  }
+  .filter-price button {
+    padding: 6px 12px;
+    border: 1px solid var(--color-foreground);
+    background: var(--color-foreground);
+    color: var(--color-background);
+    font-size: var(--fs-nav);
+    letter-spacing: var(--ls-nav);
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  /* ---- Active filters (breadcrumbs) ---- */
+  .active-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 14px var(--page-margin);
+    font-family: var(--font-nav);
+    font-size: var(--fs-nav);
+    letter-spacing: var(--ls-nav);
+    text-transform: uppercase;
+  }
+  .active-filter {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border: 1px solid var(--color-foreground);
+    border-radius: var(--radius-pill);
+    color: var(--color-foreground);
+  }
+  .active-filter--clear {
+    background: var(--color-foreground);
+    color: var(--color-background);
+  }
+
+  /* ---- Product grid ---- */
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--grid-gap);
+    padding: 0;
+  }
+  .product-grid__empty {
+    grid-column: 1 / -1;
+    padding: 80px var(--page-margin);
+    text-align: center;
+  }
+  .product-grid__empty .font-italic {
+    font-size: 22px;
+    margin-bottom: 8px;
+  }
+
+  .collection__pagination {
+    text-align: center;
+    padding: 60px var(--page-margin);
+    font-family: var(--font-nav);
+    font-size: var(--fs-nav);
+    letter-spacing: var(--ls-nav);
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 899px) {
+    .product-grid { grid-template-columns: repeat(2, 1fr); }
+    .filter-bar {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .filter-bar__sort { align-self: flex-end; }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Collection",
+  "settings": []
+}
+{% endschema %}

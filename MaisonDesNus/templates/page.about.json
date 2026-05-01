@@ -1,0 +1,13 @@
+{
+  "sections": {
+    "hero": {
+      "type": "page-hero",
+      "settings": {
+        "title": "About",
+        "body": "<p>Maison des Nus. New York.</p>",
+        "narrow": true
+      }
+    }
+  },
+  "order": ["hero"]
+}

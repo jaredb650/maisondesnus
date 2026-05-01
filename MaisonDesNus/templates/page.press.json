@@ -1,0 +1,13 @@
+{
+  "sections": {
+    "hero": {
+      "type": "page-hero",
+      "settings": {
+        "title": "Press",
+        "body": "<p>For editorial requests, image libraries, or collaborations, email <a href=\"mailto:press@maisondesnus.com\">press@maisondesnus.com</a>. Our press kit is available on request and includes logo files, founder bios, and the current season lookbook.</p>",
+        "narrow": true
+      }
+    }
+  },
+  "order": ["hero"]
+}

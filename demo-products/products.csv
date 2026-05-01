@@ -1,0 +1,27 @@
+Handle,Title,Body (HTML),Vendor,Type,Tags,Published,Option1 Name,Option1 Value,Variant SKU,Variant Inventory Qty,Variant Inventory Policy,Variant Fulfillment Service,Variant Price,Variant Compare At Price,Variant Requires Shipping,Variant Taxable,Variant Weight Unit,Image Src,Image Position,Image Alt Text,SEO Title,SEO Description,Status
+signature-hoodie-navy,Signature Hoodie — Navy,"<p>Oversized hooded sweatshirt in heavyweight cotton fleece. Small chest embroidery. Relaxed fit, dropped shoulder. Dyed deep navy.</p>",Maison des Nus,Hoodies,"new, unisex",TRUE,Size,XS,MDN-HOOD-NVY-XS,12,deny,manual,145.00,,TRUE,TRUE,g,,,,Signature Hoodie Navy,Heavyweight cotton hoodie in navy,active
+signature-hoodie-navy,,,,,,,,S,MDN-HOOD-NVY-S,12,deny,manual,145.00,,TRUE,TRUE,g,,,,,,active
+signature-hoodie-navy,,,,,,,,M,MDN-HOOD-NVY-M,12,deny,manual,145.00,,TRUE,TRUE,g,,,,,,active
+signature-hoodie-navy,,,,,,,,L,MDN-HOOD-NVY-L,8,deny,manual,145.00,,TRUE,TRUE,g,,,,,,active
+signature-hoodie-navy,,,,,,,,XL,MDN-HOOD-NVY-XL,6,deny,manual,145.00,,TRUE,TRUE,g,,,,,,active
+signature-sweatpants-navy,Signature Sweatpants — Navy,"<p>Matching sweatpants in heavyweight cotton fleece. Straight-cut leg, elastic waistband, side pockets. Pairs with the Signature Hoodie.</p>",Maison des Nus,Sweatpants,unisex,TRUE,Size,XS,MDN-PANT-NVY-XS,10,deny,manual,115.00,,TRUE,TRUE,g,,,,Signature Sweatpants Navy,Cotton fleece sweatpants in navy,active
+signature-sweatpants-navy,,,,,,,,S,MDN-PANT-NVY-S,10,deny,manual,115.00,,TRUE,TRUE,g,,,,,,active
+signature-sweatpants-navy,,,,,,,,M,MDN-PANT-NVY-M,10,deny,manual,115.00,,TRUE,TRUE,g,,,,,,active
+signature-sweatpants-navy,,,,,,,,L,MDN-PANT-NVY-L,8,deny,manual,115.00,,TRUE,TRUE,g,,,,,,active
+signature-sweatpants-navy,,,,,,,,XL,MDN-PANT-NVY-XL,6,deny,manual,115.00,,TRUE,TRUE,g,,,,,,active
+cropped-sweatshirt-red,Cropped Sweatshirt — Red,"<p>Boxy cropped crewneck in bright red cotton fleece. Small script embroidery at chest. Slightly cropped waist. Relaxed fit.</p>",Maison des Nus,Sweatshirts,"final-few, womens",TRUE,Size,XS,MDN-CRSS-RED-XS,4,deny,manual,125.00,,TRUE,TRUE,g,,,,Cropped Sweatshirt Red,Cropped cotton sweatshirt in red,active
+cropped-sweatshirt-red,,,,,,,,S,MDN-CRSS-RED-S,3,deny,manual,125.00,,TRUE,TRUE,g,,,,,,active
+cropped-sweatshirt-red,,,,,,,,M,MDN-CRSS-RED-M,2,deny,manual,125.00,,TRUE,TRUE,g,,,,,,active
+cropped-sweatshirt-red,,,,,,,,L,MDN-CRSS-RED-L,1,deny,manual,125.00,,TRUE,TRUE,g,,,,,,active
+sweatshorts-red,Sweatshorts — Red,"<p>Matching sweatshorts in heavyweight cotton fleece. Mid-thigh length, elastic waistband, side pockets. Pairs with the Cropped Sweatshirt.</p>",Maison des Nus,Shorts,womens,TRUE,Size,XS,MDN-SHRT-RED-XS,8,deny,manual,85.00,,TRUE,TRUE,g,,,,Sweatshorts Red,Cotton fleece sweatshorts in red,active
+sweatshorts-red,,,,,,,,S,MDN-SHRT-RED-S,8,deny,manual,85.00,,TRUE,TRUE,g,,,,,,active
+sweatshorts-red,,,,,,,,M,MDN-SHRT-RED-M,6,deny,manual,85.00,,TRUE,TRUE,g,,,,,,active
+sweatshorts-red,,,,,,,,L,MDN-SHRT-RED-L,4,deny,manual,85.00,,TRUE,TRUE,g,,,,,,active
+playing-cards-hoodie-navy,Playing Cards Hoodie — Navy,"<p>Limited-run hoodie with a Joker and Queen of Hearts graphic printed across the back. Heavyweight cotton fleece in deep navy. Relaxed fit.</p>",Maison des Nus,Hoodies,"new, unisex",TRUE,Size,S,MDN-JCRD-NVY-S,6,deny,manual,165.00,,TRUE,TRUE,g,,,,Playing Cards Hoodie Navy,Graphic print hoodie in navy,active
+playing-cards-hoodie-navy,,,,,,,,M,MDN-JCRD-NVY-M,6,deny,manual,165.00,,TRUE,TRUE,g,,,,,,active
+playing-cards-hoodie-navy,,,,,,,,L,MDN-JCRD-NVY-L,5,deny,manual,165.00,,TRUE,TRUE,g,,,,,,active
+playing-cards-hoodie-navy,,,,,,,,XL,MDN-JCRD-NVY-XL,3,deny,manual,165.00,,TRUE,TRUE,g,,,,,,active
+turtleneck-red,Turtleneck Sweatshirt — Red,"<p>Relaxed turtleneck in bright red heavyweight cotton. Ribbed collar and cuffs. Long, boxy silhouette — layer it, tuck it, or wear solo.</p>",Maison des Nus,Sweatshirts,"new, womens",TRUE,Size,XS,MDN-TURT-RED-XS,8,deny,manual,135.00,,TRUE,TRUE,g,,,,Turtleneck Sweatshirt Red,Relaxed turtleneck in red,active
+turtleneck-red,,,,,,,,S,MDN-TURT-RED-S,8,deny,manual,135.00,,TRUE,TRUE,g,,,,,,active
+turtleneck-red,,,,,,,,M,MDN-TURT-RED-M,6,deny,manual,135.00,,TRUE,TRUE,g,,,,,,active
+turtleneck-red,,,,,,,,L,MDN-TURT-RED-L,4,deny,manual,135.00,,TRUE,TRUE,g,,,,,,active

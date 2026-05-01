@@ -1,0 +1,55 @@
+{%- assign gc_product_handle = section.settings.product_handle | default: 'gift-card' -%}
+{%- assign gc_product = all_products[gc_product_handle] -%}
+<section class="page-width page-width--narrow" style="padding: 32px var(--page-margin) 96px;">
+  <div class="giftcard-presets">
+    {%- assign amounts = '25,50,100,250,500,1000,1500' | split: ',' -%}
+    {%- for amt in amounts -%}
+      <button type="button" class="giftcard-preset" data-gc-preset data-amount="{{ amt }}">${{ amt }}</button>
+    {%- endfor -%}
+  </div>
+
+  {%- if gc_product -%}
+    {%- form 'product', gc_product, data-gc-form: true -%}
+      <input type="hidden" name="id" value="{{ gc_product.selected_or_first_available_variant.id }}">
+
+      <div class="custom-form">
+        <div class="custom-form__field">
+          <label class="custom-form__label" for="gc-custom">Custom amount</label>
+          <input type="number" id="gc-custom" min="25" max="10000" step="5" class="custom-form__input" data-gc-custom placeholder="$">
+        </div>
+        <div class="custom-form__row">
+          <div class="custom-form__field">
+            <label class="custom-form__label" for="gc-to">To</label>
+            <input type="text" id="gc-to" name="properties[To]" class="custom-form__input">
+          </div>
+          <div class="custom-form__field">
+            <label class="custom-form__label" for="gc-from">From</label>
+            <input type="text" id="gc-from" name="properties[From]" class="custom-form__input">
+          </div>
+        </div>
+        <div class="custom-form__field">
+          <label class="custom-form__label" for="gc-message">Message</label>
+          <textarea id="gc-message" name="properties[Message]" class="custom-form__textarea" placeholder="Add a note (optional)"></textarea>
+        </div>
+        <div class="custom-form__field">
+          <label class="custom-form__label" for="gc-delivery">Deliver on (optional)</label>
+          <input type="date" id="gc-delivery" name="properties[Delivery Date]" class="custom-form__input">
+        </div>
+
+        <button type="submit" class="btn btn--primary btn--pill" style="padding: 14px 36px; width: fit-content;">Add to Cart</button>
+      </div>
+    {%- endform -%}
+  {%- else -%}
+    <p class="font-italic" style="text-align: center; padding: 48px 0;">Gift cards will be available shortly. <a href="/pages/contact" class="link-underline">Contact us</a> to purchase directly.</p>
+  {%- endif -%}
+</section>
+
+{% schema %}
+{
+  "name": "Gift Card Buy",
+  "settings": [
+    { "type": "text", "id": "product_handle", "label": "Gift card product handle", "default": "gift-card" }
+  ],
+  "presets": [{ "name": "Gift Card Buy" }]
+}
+{% endschema %}

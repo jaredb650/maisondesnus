@@ -1,0 +1,13 @@
+{
+  "sections": {
+    "hero": {
+      "type": "page-hero",
+      "settings": {
+        "title": "Contact",
+        "body": "<p><strong>General:</strong> hello@maisondesnus.com<br><strong>Orders:</strong> orders@maisondesnus.com<br><strong>Press:</strong> press@maisondesnus.com<br><strong>Studio:</strong> New York, NY — by appointment only.</p>",
+        "narrow": true
+      }
+    }
+  },
+  "order": ["hero"]
+}

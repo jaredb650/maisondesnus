@@ -1,0 +1,13 @@
+{
+  "sections": {
+    "hero": {
+      "type": "page-hero",
+      "settings": {
+        "title": "Accessibility",
+        "body": "<p>Maison des Nus is committed to making our website accessible to the widest possible audience, regardless of technology or ability.</p><h2>Our commitment</h2><p>We work toward WCAG 2.1 AA conformance across the site. We support screen readers, full keyboard navigation, high color contrast, and resizable text.</p><h2>Need help?</h2><p>If you have trouble accessing any part of this site, please email <a href=\"mailto:access@maisondesnus.com\">access@maisondesnus.com</a>.</p>",
+        "narrow": true
+      }
+    }
+  },
+  "order": ["hero"]
+}

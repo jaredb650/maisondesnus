@@ -1,0 +1,19 @@
+{
+  "sections": {
+    "hero": {
+      "type": "page-hero",
+      "settings": {
+        "title": "Gift Cards",
+        "body": "<p>Delivered digitally. Scheduled delivery optional at checkout.</p>",
+        "narrow": true
+      }
+    },
+    "buy": {
+      "type": "gift-card-buy",
+      "settings": {
+        "product_handle": "gift-card"
+      }
+    }
+  },
+  "order": ["hero", "buy"]
+}

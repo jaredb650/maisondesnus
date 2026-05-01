@@ -1,0 +1,56 @@
+{%- assign collection = collections[section.settings.collection] -%}
+<section class="featured-collection" aria-labelledby="fc-{{ section.id }}-title">
+  <div class="featured-collection__header">
+    {%- if section.settings.script_eyebrow != blank -%}
+      <div class="featured-collection__eyebrow-script" data-reveal="up">{{ section.settings.script_eyebrow }}</div>
+    {%- endif -%}
+    {%- if section.settings.title != blank -%}
+      <h2 id="fc-{{ section.id }}-title" class="featured-collection__title">{{ section.settings.title }}</h2>
+    {%- endif -%}
+    {%- if section.settings.subtitle != blank -%}
+      <div class="featured-collection__sub">{{ section.settings.subtitle }}</div>
+    {%- endif -%}
+  </div>
+
+  <div class="product-grid">
+    {%- assign limit = section.settings.products_to_show | default: 4 -%}
+    {%- if collection and collection.products.size > 0 -%}
+      {%- for product in collection.products limit: limit -%}
+        {%- render 'product-card', product: product -%}
+      {%- endfor -%}
+    {%- else -%}
+      {%- assign placeholder_offset = 0 -%}
+      {%- if section.settings.title contains 'Best' or section.settings.title contains 'Love' -%}
+        {%- assign placeholder_offset = 4 -%}
+      {%- endif -%}
+      {%- for i in (0..3) -%}
+        {%- assign idx = i | plus: placeholder_offset -%}
+        {%- render 'product-card-placeholder', index: idx -%}
+      {%- endfor -%}
+    {%- endif -%}
+  </div>
+
+  {%- if section.settings.show_view_all -%}
+    <div class="featured-collection__footer">
+      <a href="{% if collection %}{{ collection.url }}{% else %}/collections/all{% endif %}" class="featured-collection__link">
+        {{ section.settings.view_all_text | default: 'Shop the Collection' }}
+      </a>
+    </div>
+  {%- endif -%}
+</section>
+
+{% schema %}
+{
+  "name": "Featured Collection",
+  "settings": [
+    { "type": "collection", "id": "collection", "label": "Collection" },
+    { "type": "text", "id": "title", "label": "Title (italic serif)", "default": "New Arrivals" },
+    { "type": "text", "id": "subtitle", "label": "Subtitle (caps)", "default": "Just Landed" },
+    { "type": "text", "id": "script_eyebrow", "label": "Script eyebrow", "default": "fresh off the rack" },
+    { "type": "range", "id": "products_to_show", "label": "Products to show", "min": 2, "max": 12, "step": 1, "default": 4 },
+    { "type": "checkbox", "id": "show_view_all", "label": "Show view all link", "default": true },
+    { "type": "text", "id": "view_all_text", "label": "View all text", "default": "Shop the Collection" }
+  ],
+  "presets": [{ "name": "Featured Collection" }]
+}
+{% endschema %}

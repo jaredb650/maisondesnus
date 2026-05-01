@@ -1,0 +1,72 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Maison des Nus",
+    "theme_version": "3.0.0",
+    "theme_author": "MDN Studio",
+    "theme_documentation_url": "https://help.shopify.com/manual/online-store/themes",
+    "theme_support_url": "https://support.shopify.com/"
+  },
+  {
+    "name": "Colors",
+    "settings": [
+      {
+        "type": "color",
+        "id": "background_color",
+        "default": "#FCFBF5",
+        "label": "Background"
+      },
+      {
+        "type": "color",
+        "id": "foreground_color",
+        "default": "#241E16",
+        "label": "Text"
+      }
+    ]
+  },
+  {
+    "name": "Layout",
+    "settings": [
+      {
+        "type": "select",
+        "id": "max_page_width",
+        "label": "Page width",
+        "options": [
+          { "value": "1400px", "label": "Standard" },
+          { "value": "1600px", "label": "Wide" },
+          { "value": "100%", "label": "Full bleed" }
+        ],
+        "default": "100%"
+      }
+    ]
+  },
+  {
+    "name": "Social Media",
+    "settings": [
+      {
+        "type": "text",
+        "id": "social_instagram",
+        "label": "Instagram handle",
+        "default": "maisondesnus"
+      },
+      {
+        "type": "text",
+        "id": "social_tiktok",
+        "label": "TikTok handle",
+        "default": "maisondesnus"
+      },
+      {
+        "type": "text",
+        "id": "social_pinterest",
+        "label": "Pinterest handle",
+        "default": "maisondesnus"
+      },
+      {
+        "type": "text",
+        "id": "social_facebook",
+        "label": "Facebook handle",
+        "default": "maisondesnus"
+      }
+    ]
+  }
+]

@@ -1,0 +1,68 @@
+{%- if section.settings.show_banner -%}
+  <div class="announcement-bar{% if section.settings.italic_style %} announcement-bar--italic{% endif %}"
+       role="region" aria-label="Announcements"
+       style="background-color: {{ section.settings.bar_color }}; color: {{ section.settings.text_color }};">
+    <div class="announcement-bar__inner">
+      {%- if section.settings.link_url != blank -%}
+        <a href="{{ section.settings.link_url }}" class="announcement-bar__link">
+          <span>{{ section.settings.text }}</span>
+          <span class="announcement-bar__arrow" aria-hidden="true">→</span>
+        </a>
+      {%- else -%}
+        <span>{{ section.settings.text }}</span>
+      {%- endif -%}
+    </div>
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  .announcement-bar {
+    width: 100%;
+    font-family: var(--font-nav);
+    font-size: var(--fs-nav);
+    letter-spacing: var(--ls-nav);
+    text-transform: uppercase;
+  }
+  .announcement-bar--italic {
+    font-family: var(--font-italic);
+    font-style: italic;
+    font-size: 13px;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  .announcement-bar__inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--announcement-height);
+    padding: 8px var(--page-margin);
+    text-align: center;
+  }
+  .announcement-bar__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: inherit;
+  }
+  .announcement-bar__arrow {
+    display: inline-block;
+    transform: translateY(-1px);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Announcement Bar",
+  "settings": [
+    { "type": "checkbox", "id": "show_banner", "label": "Show announcement", "default": true },
+    { "type": "inline_richtext", "id": "text", "label": "Text", "default": "Complimentary shipping on orders over $150" },
+    { "type": "url", "id": "link_url", "label": "Link (optional)" },
+    { "type": "checkbox", "id": "italic_style", "label": "Italic serif style (light row)", "default": false },
+    { "type": "color", "id": "bar_color", "label": "Background", "default": "#241E16" },
+    { "type": "color", "id": "text_color", "label": "Text color", "default": "#FCFBF5" }
+  ],
+  "presets": [
+    { "name": "Announcement Bar", "settings": {} }
+  ]
+}
+{% endschema %}

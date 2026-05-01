@@ -1,0 +1,40 @@
+{
+  "type": "footer",
+  "name": "Footer Group",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "settings": {
+        "show_wordmark": true,
+        "tagline": "New York",
+        "newsletter_text": "Sign up for updates on new arrivals and editorials.",
+        "show_payment_icons": true
+      },
+      "blocks": {
+        "col1": {
+          "type": "link_column",
+          "settings": {
+            "heading": "The Company",
+            "fallback_links": "About|/pages/about\nPress|/pages/press\nCareers|/pages/careers\nContact|/pages/contact\nAccessibility|/pages/accessibility"
+          }
+        },
+        "col2": {
+          "type": "link_column",
+          "settings": {
+            "heading": "Customer Care",
+            "fallback_links": "Shipping|/pages/shipping\nReturns|/pages/returns\nSize Guide|/pages/size-guide\nCustom Orders|/pages/custom-orders\nGift Cards|/pages/gift-card\nFAQ|/pages/faq"
+          }
+        },
+        "col3": {
+          "type": "link_column",
+          "settings": {
+            "heading": "Follow",
+            "fallback_links": "Instagram|https://instagram.com\nTikTok|https://tiktok.com\nPinterest|https://pinterest.com"
+          }
+        }
+      },
+      "block_order": ["col1", "col2", "col3"]
+    }
+  },
+  "order": ["footer"]
+}

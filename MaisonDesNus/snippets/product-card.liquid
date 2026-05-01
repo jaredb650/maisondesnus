@@ -1,0 +1,151 @@
+{%- comment -%}
+  Product Card — image-only by default, name + price revealed on hover
+  Required: product
+{%- endcomment -%}
+{%- liquid
+  assign primary = product.featured_image
+  assign secondary = product.images[1]
+  assign on_sale = false
+  if product.compare_at_price > product.price
+    assign on_sale = true
+  endif
+  assign is_new = false
+  if product.tags contains 'new'
+    assign is_new = true
+  endif
+  assign is_final_few = false
+  if product.tags contains 'final-few' or product.tags contains 'final few'
+    assign is_final_few = true
+  endif
+-%}
+<article class="product-card">
+  <a href="{{ product.url }}" class="product-card__link" aria-label="{{ product.title | escape }}">
+    <div class="product-card__media">
+      {%- if on_sale or is_final_few or is_new -%}
+        <span class="product-card__badge">
+          {%- if on_sale -%}Sale
+          {%- elsif is_final_few -%}Few Left
+          {%- elsif is_new -%}New
+          {%- endif -%}
+        </span>
+      {%- endif -%}
+
+      {%- if primary -%}
+        {{ primary | image_url: width: 900 | image_tag:
+            class: 'product-card__image product-card__image--primary',
+            loading: 'lazy',
+            widths: '300,500,700,900',
+            sizes: '(max-width: 899px) 50vw, 25vw',
+            alt: product.title | escape }}
+      {%- else -%}
+        <div class="product-card__image product-card__image--placeholder"></div>
+      {%- endif -%}
+
+      {%- if secondary -%}
+        {{ secondary | image_url: width: 900 | image_tag:
+            class: 'product-card__image product-card__image--hover',
+            loading: 'lazy',
+            widths: '300,500,700,900',
+            sizes: '(max-width: 899px) 50vw, 25vw',
+            alt: product.title | escape }}
+      {%- endif -%}
+
+      <div class="product-card__info">
+        <span class="product-card__title">{{ product.title }}</span>
+        <span class="product-card__price {% if on_sale %}product-card__price--sale{% endif %}">
+          {%- if on_sale -%}
+            <s>{{ product.compare_at_price | money }}</s>
+          {%- endif -%}
+          {{ product.price | money }}
+        </span>
+      </div>
+    </div>
+  </a>
+</article>
+
+{% stylesheet %}
+  .product-card { position: relative; }
+  .product-card__link {
+    display: block;
+    color: var(--color-foreground);
+  }
+  .product-card__media {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background-color: transparent;
+  }
+  .product-card__image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity var(--transition-base), transform var(--transition-base);
+  }
+  .product-card__image--placeholder {
+    background-color: var(--color-surface);
+  }
+  .product-card__image--hover { opacity: 0; }
+  .product-card:hover .product-card__image--hover { opacity: 1; }
+  .product-card:hover .product-card__image { transform: scale(1.04); }
+
+  .product-card__badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 2;
+    padding: 0;
+    background: transparent;
+    font-family: var(--font-nav);
+    font-size: var(--fs-label);
+    font-weight: 500;
+    letter-spacing: var(--ls-label);
+    text-transform: uppercase;
+    mix-blend-mode: difference;
+    color: #fff;
+    transition: opacity var(--transition-fast);
+  }
+  .product-card:hover .product-card__badge { opacity: 0; }
+
+  .product-card__info {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 12px;
+    font-family: var(--font-nav);
+    font-size: var(--fs-nav);
+    letter-spacing: var(--ls-nav);
+    text-transform: uppercase;
+    color: var(--color-background);
+    background: linear-gradient(to top, rgba(0,0,0,0.55), rgba(0,0,0,0));
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+    pointer-events: none;
+  }
+  .product-card:hover .product-card__info,
+  .product-card:focus-within .product-card__info {
+    opacity: 1;
+  }
+  .product-card__title {
+    font-weight: 500;
+  }
+  .product-card__price s {
+    color: rgba(255,255,255,0.65);
+    margin-right: 6px;
+  }
+
+  @media (max-width: 899px) {
+    /* On touch devices, always show name + price overlay */
+    .product-card__info {
+      opacity: 1;
+    }
+  }
+{% endstylesheet %}

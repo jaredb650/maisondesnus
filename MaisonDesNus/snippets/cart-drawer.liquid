@@ -1,0 +1,50 @@
+<div class="cart-drawer__overlay" data-cart-overlay></div>
+<aside class="cart-drawer" id="cart-drawer" data-cart-drawer role="dialog" aria-modal="true" aria-label="Shopping cart">
+  <div class="cart-drawer__header">
+    <h2 class="cart-drawer__title">Bag</h2>
+    <button type="button" class="cart-drawer__close" data-cart-close aria-label="Close cart">Close</button>
+  </div>
+
+  <div class="cart-drawer__body" data-cart-body>
+    {%- if cart.item_count > 0 -%}
+      {%- for item in cart.items -%}
+        <div class="cart-drawer__item" data-cart-item data-key="{{ item.key }}">
+          <div class="cart-drawer__item-media">
+            {%- if item.image -%}
+              {{ item.image | image_url: width: 160 | image_tag: loading: 'lazy', alt: item.title | escape }}
+            {%- endif -%}
+          </div>
+          <div class="cart-drawer__item-info">
+            <a href="{{ item.url }}" class="cart-drawer__item-title">{{ item.product.title }}</a>
+            {%- unless item.product.has_only_default_variant -%}
+              <span class="cart-drawer__item-variant">{{ item.variant.title }}</span>
+            {%- endunless -%}
+            <span class="cart-drawer__item-price">{{ item.final_price | money }}</span>
+            <div class="cart-drawer__item-qty">
+              <button type="button" data-cart-qty-dec aria-label="Decrease">−</button>
+              <span>{{ item.quantity }}</span>
+              <button type="button" data-cart-qty-inc aria-label="Increase">+</button>
+            </div>
+            <button type="button" class="cart-drawer__item-remove" data-cart-remove>Remove</button>
+          </div>
+        </div>
+      {%- endfor -%}
+    {%- else -%}
+      <div class="cart-drawer__empty" data-cart-empty>
+        <div class="cart-drawer__empty-title font-italic">Your bag is empty.</div>
+        <a href="/collections/all" class="btn btn--outline btn--pill">Shop Now</a>
+      </div>
+    {%- endif -%}
+  </div>
+
+  {%- if cart.item_count > 0 -%}
+    <div class="cart-drawer__footer">
+      <div class="cart-drawer__row cart-drawer__row--total">
+        <span>Subtotal</span>
+        <span data-cart-subtotal>{{ cart.total_price | money }}</span>
+      </div>
+      <p class="cart-drawer__note">Shipping and taxes calculated at checkout.</p>
+      <a href="{{ routes.cart_url }}/checkout" class="btn btn--primary btn--pill cart-drawer__checkout">Checkout</a>
+    </div>
+  {%- endif -%}
+</aside>

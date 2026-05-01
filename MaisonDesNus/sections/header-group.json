@@ -1,0 +1,37 @@
+{
+  "type": "header",
+  "name": "Header Group",
+  "sections": {
+    "announcement-dark": {
+      "type": "announcement-bar",
+      "settings": {
+        "show_banner": true,
+        "text": "Complimentary shipping on orders over $150",
+        "link_url": "/pages/shipping",
+        "italic_style": false,
+        "bar_color": "#241E16",
+        "text_color": "#FCFBF5"
+      }
+    },
+    "announcement-light": {
+      "type": "announcement-bar",
+      "settings": {
+        "show_banner": true,
+        "text": "Sign up for updates and new arrivals",
+        "link_url": "/pages/contact",
+        "italic_style": true,
+        "bar_color": "#FCFBF5",
+        "text_color": "#241E16"
+      }
+    },
+    "header": {
+      "type": "header",
+      "settings": {}
+    }
+  },
+  "order": [
+    "announcement-dark",
+    "announcement-light",
+    "header"
+  ]
+}

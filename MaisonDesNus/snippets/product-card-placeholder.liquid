@@ -1,0 +1,21 @@
+{%- comment -%}
+  Placeholder product card for preview/empty states.
+  Optional: index (0-7)
+{%- endcomment -%}
+{%- liquid
+  assign index = index | default: 0
+  assign names = 'Product One,Product Two,Product Three,Product Four,Product Five,Product Six,Product Seven,Product Eight' | split: ','
+  assign prices = '$75.00,$54.00,$60.00,$120.00,$90.00,$50.00,$60.00,$95.00' | split: ','
+  assign safe_index = index | modulo: 8
+-%}
+<article class="product-card">
+  <a href="/collections/all" class="product-card__link" aria-label="{{ names[safe_index] }}">
+    <div class="product-card__media">
+      <div class="product-card__image product-card__image--placeholder"></div>
+    </div>
+    <div class="product-card__info">
+      <span class="product-card__title">{{ names[safe_index] }}</span>
+      <span class="product-card__price">{{ prices[safe_index] }}</span>
+    </div>
+  </a>
+</article>

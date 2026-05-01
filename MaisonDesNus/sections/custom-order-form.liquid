@@ -1,0 +1,78 @@
+<section class="page-width page-width--narrow" style="padding: 32px var(--page-margin) 96px;">
+  {%- form 'contact', id: 'custom-order-form' -%}
+    <input type="hidden" name="contact[tags]" value="custom-order">
+    <div class="custom-form">
+      <div class="custom-form__row">
+        <div class="custom-form__field">
+          <label class="custom-form__label" for="co-name">Name</label>
+          <input type="text" id="co-name" name="contact[name]" class="custom-form__input" required>
+        </div>
+        <div class="custom-form__field">
+          <label class="custom-form__label" for="co-email">Email</label>
+          <input type="email" id="co-email" name="contact[email]" class="custom-form__input" required>
+        </div>
+      </div>
+
+      <div class="custom-form__row">
+        <div class="custom-form__field">
+          <label class="custom-form__label" for="co-phone">Phone (optional)</label>
+          <input type="tel" id="co-phone" name="contact[phone]" class="custom-form__input">
+        </div>
+        <div class="custom-form__field">
+          <label class="custom-form__label" for="co-city">City</label>
+          <input type="text" id="co-city" name="contact[city]" class="custom-form__input">
+        </div>
+      </div>
+
+      <div class="custom-form__field">
+        <label class="custom-form__label" for="co-type">Category</label>
+        <select id="co-type" name="contact[type]" class="custom-form__select">
+          <option value="">Select a category</option>
+          <option>Bridal</option>
+          <option>Event / Formal</option>
+          <option>Personal</option>
+          <option>Other</option>
+        </select>
+      </div>
+
+      <div class="custom-form__row">
+        <div class="custom-form__field">
+          <label class="custom-form__label" for="co-date">Needed by</label>
+          <input type="date" id="co-date" name="contact[date]" class="custom-form__input">
+        </div>
+        <div class="custom-form__field">
+          <label class="custom-form__label" for="co-budget">Budget range</label>
+          <select id="co-budget" name="contact[budget]" class="custom-form__select">
+            <option value="">Select a range</option>
+            <option>Under $500</option>
+            <option>$500 — $1,500</option>
+            <option>$1,500 — $5,000</option>
+            <option>$5,000 — $15,000</option>
+            <option>$15,000+</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="custom-form__field">
+        <label class="custom-form__label" for="co-message">Details</label>
+        <textarea id="co-message" name="contact[message]" class="custom-form__textarea" placeholder="Describe the piece you're looking for. Links or references welcome."></textarea>
+      </div>
+
+      <div style="margin-top: 8px;">
+        <button type="submit" class="btn btn--primary btn--pill" style="padding: 14px 36px;">Submit Request</button>
+      </div>
+
+      {%- if form.posted_successfully? -%}
+        <p class="font-italic" style="margin-top: 12px;">Request received. We'll respond within 2 business days.</p>
+      {%- endif -%}
+    </div>
+  {%- endform -%}
+</section>
+
+{% schema %}
+{
+  "name": "Custom Order Form",
+  "settings": [],
+  "presets": [{ "name": "Custom Order Form" }]
+}
+{% endschema %}
