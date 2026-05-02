@@ -5,6 +5,8 @@
       assign shop_has_dropdown = true
     when 'list-collections'
       assign shop_has_dropdown = true
+    when 'product'
+      assign shop_has_dropdown = true
   endcase
 -%}
 
@@ -15,7 +17,7 @@
       <a href="{{ routes.root_url }}" class="site-header__nav-link">Home</a>
 
       <div class="site-header__nav-item{% if shop_has_dropdown %} has-dropdown{% endif %}" data-shop-dropdown>
-        <a href="/collections/all" class="site-header__nav-link">Shop</a>
+        <a href="{{ routes.all_products_collection_url }}" class="site-header__nav-link">Shop</a>
         {%- if shop_has_dropdown -%}
           <button type="button" class="site-header__nav-caret" data-shop-dropdown-toggle aria-expanded="false" aria-label="Toggle shop menu">
             <span class="caret" aria-hidden="true">⌄</span>
@@ -27,12 +29,20 @@
               <a href="{{ link.url }}" role="menuitem">{{ link.title }}</a>
             {%- endfor -%}
           </div>
+        {%- elsif shop_has_dropdown -%}
+          <div class="site-header__dropdown" role="menu">
+            <a href="{{ routes.all_products_collection_url }}" role="menuitem">View All</a>
+            <a href="{{ routes.collections_url }}/streetwear" role="menuitem">Streetwear</a>
+            <a href="{{ routes.collections_url }}/jewellery" role="menuitem">Jewellery</a>
+            <a href="{{ routes.collections_url }}/accessories" role="menuitem">Accessories</a>
+            <a href="/pages/gift-card" role="menuitem">Gift Card</a>
+            <a href="/pages/custom-orders" role="menuitem">Custom</a>
+          </div>
         {%- endif -%}
       </div>
 
       <a href="/pages/custom-orders" class="site-header__nav-link">Custom</a>
       <a href="/pages/about" class="site-header__nav-link">About</a>
-      <a href="{{ routes.account_url }}" class="site-header__nav-link">Sign In</a>
     </nav>
 
     {%- comment -%} === Left: mobile menu toggle === {%- endcomment -%}
@@ -54,6 +64,8 @@
 
     {%- comment -%} === Right: desktop actions === {%- endcomment -%}
     <div class="site-header__actions site-header__actions--desktop">
+      <a href="{{ routes.account_url }}" class="site-header__nav-link site-header__signin">Sign In</a>
+
       <button type="button" class="site-header__bag" data-cart-toggle aria-label="Cart" aria-controls="cart-drawer">
         Bag <span class="site-header__bag-count" data-cart-count>{{ cart.item_count | prepend: '00' | slice: -2, 2 }}</span>
       </button>
@@ -84,7 +96,7 @@
 
   <nav class="mobile-menu__nav" aria-label="Mobile navigation">
     <a href="{{ routes.root_url }}">Home</a>
-    <a href="/collections/all">Shop</a>
+    <a href="{{ routes.all_products_collection_url }}">Shop</a>
     <a href="/pages/custom-orders">Custom</a>
     <a href="/pages/about">About</a>
     <a href="/pages/gift-card">Gift Card</a>
@@ -104,16 +116,14 @@
     position: sticky;
     top: 0;
     z-index: 50;
-    background-color: var(--color-background);
-    transition: transform var(--transition-base), background-color var(--transition-base);
+    background-color: transparent;
+    color: var(--header-foreground, var(--color-foreground));
+    transition: transform var(--transition-base), color var(--transition-fast);
     width: 100%;
   }
   .site-header.is-hidden { transform: translateY(-100%); }
-  .site-header.is-scrolled { box-shadow: 0 1px 0 rgba(36, 30, 22, 0.06); }
-
-  /* Transparent header on homepage — hero rises behind via main negative margin */
-  body.template-index .site-header { background-color: transparent; }
-  body.template-index .site-header.is-scrolled { background-color: var(--color-background); }
+  .site-header.is-light { --header-foreground: var(--color-background); }
+  .site-header.is-dark { --header-foreground: var(--color-foreground); }
 
   .site-header__inner {
     display: grid;
@@ -131,14 +141,14 @@
   .site-header__nav {
     display: flex;
     align-items: center;
-    gap: clamp(28px, 5vw, 64px);
+    gap: clamp(34px, 6.2vw, 82px);
     font-family: var(--font-nav);
     font-size: var(--fs-nav);
     font-weight: 500;
     letter-spacing: var(--ls-nav);
     text-transform: uppercase;
   }
-  .site-header__nav-link { color: var(--color-foreground); }
+  .site-header__nav-link { color: currentColor; transition: opacity var(--transition-fast); }
   .site-header__nav-link:hover { opacity: 0.6; }
   .site-header__nav-item {
     position: relative;
@@ -164,16 +174,19 @@
     position: absolute;
     top: 100%;
     left: 0;
-    min-width: 220px;
-    background: rgba(252, 251, 245, 0.96);
-    backdrop-filter: blur(8px);
-    padding: 16px 24px;
+    min-width: 150px;
+    background: rgba(252, 251, 245, 0.66);
+    backdrop-filter: blur(5px);
+    padding: 12px 14px 14px 0;
     display: none;
     flex-direction: column;
-    gap: 10px;
+    gap: 4px;
     z-index: 5;
+    color: var(--color-foreground);
+    line-height: 1.15;
   }
   .site-header__nav-item.is-open .site-header__dropdown { display: flex; }
+  .site-header__dropdown a:hover { opacity: 0.55; }
 
   /* ---- Center logo ---- */
   .site-header__logo {
@@ -201,13 +214,15 @@
     letter-spacing: 0.24em;
     text-transform: uppercase;
     margin-top: 2px;
-    color: var(--color-foreground);
+    color: currentColor;
   }
   .site-header__logo-image {
     height: 30px;
     width: auto;
     display: block;
+    transition: filter var(--transition-fast), opacity var(--transition-fast);
   }
+  .site-header.is-light .site-header__logo-image { filter: brightness(0) invert(1); }
   @media (min-width: 900px) {
     .site-header__logo-image { height: 34px; }
     .site-header__logo-wordmark { font-size: 24px; }
@@ -225,7 +240,7 @@
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    gap: 24px;
+    gap: clamp(24px, 3.4vw, 52px);
   }
   .site-header__bag {
     font-family: var(--font-nav);
@@ -233,9 +248,11 @@
     font-weight: 500;
     letter-spacing: var(--ls-nav);
     text-transform: uppercase;
-    color: var(--color-foreground);
+    color: currentColor;
     padding: 0;
+    transition: opacity var(--transition-fast);
   }
+  .site-header__bag:hover { opacity: 0.6; }
   .site-header__bag-count {
     display: inline-block;
     margin-left: 4px;
@@ -245,14 +262,21 @@
   .site-header__search {
     display: flex;
     align-items: center;
-    border: 1px solid var(--color-foreground);
+    border: 1px solid currentColor;
     border-radius: var(--radius-pill);
     padding: 0 8px 0 20px;
-    height: 28px;
+    height: 30px;
     flex: 1;
-    min-width: 260px;
-    max-width: 360px;
+    min-width: 290px;
+    max-width: 400px;
     gap: 8px;
+    color: currentColor;
+    transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+  }
+  .site-header__search:focus-within {
+    background-color: var(--color-foreground);
+    border-color: var(--color-foreground);
+    color: var(--color-background);
   }
   .site-header__search input[type="search"] {
     flex: 1;
@@ -262,11 +286,11 @@
     font-size: var(--fs-nav);
     letter-spacing: var(--ls-nav);
     text-transform: uppercase;
-    color: var(--color-foreground);
+    color: currentColor;
     min-width: 0;
   }
   .site-header__search input[type="search"]::placeholder {
-    color: var(--color-foreground);
+    color: currentColor;
     opacity: 0.7;
   }
   .site-header__search button {
@@ -275,7 +299,7 @@
     letter-spacing: var(--ls-nav);
     text-transform: uppercase;
     padding: 4px 12px;
-    color: var(--color-foreground);
+    color: currentColor;
     background: transparent;
   }
 
@@ -289,7 +313,7 @@
     font-weight: 500;
     letter-spacing: var(--ls-nav);
     text-transform: uppercase;
-    color: var(--color-foreground);
+    color: currentColor;
   }
 
   @media (max-width: 899px) {

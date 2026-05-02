@@ -17,25 +17,37 @@
     if (!header) return;
     let lastY = 0;
     let ticking = false;
-    const threshold = 120;
+    const threshold = 180;
+
+    function updateHeaderTone(y) {
+      const isHome = document.body.classList.contains('template-index');
+      const hero = $('[data-hero]');
+      const lightUntil = hero ? hero.offsetTop + Math.max(0, hero.offsetHeight - header.offsetHeight) : 0;
+      const shouldBeLight = isHome && y < lightUntil;
+      header.classList.toggle('is-light', shouldBeLight);
+      header.classList.toggle('is-dark', !shouldBeLight);
+    }
 
     function tick() {
       const y = window.scrollY;
       if (y > threshold) {
-        if (y > lastY + 4) header.classList.add('is-hidden');
-        else if (y < lastY - 4) header.classList.remove('is-hidden');
+        if (y > lastY + 8) header.classList.add('is-hidden');
+        else if (y < lastY - 8) header.classList.remove('is-hidden');
       } else {
         header.classList.remove('is-hidden');
       }
       if (y > 40) header.classList.add('is-scrolled');
       else header.classList.remove('is-scrolled');
+      updateHeaderTone(y);
       lastY = y;
       ticking = false;
     }
 
+    updateHeaderTone(window.scrollY);
     window.addEventListener('scroll', () => {
       if (!ticking) { requestAnimationFrame(tick); ticking = true; }
     }, { passive: true });
+    window.addEventListener('resize', () => updateHeaderTone(window.scrollY), { passive: true });
   }
 
   // =================================================

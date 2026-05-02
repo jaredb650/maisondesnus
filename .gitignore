@@ -17,6 +17,8 @@ release/
 
 # Local QA/browser artifacts
 .playwright-mcp/
+.playwright-cli/
+output/
 /*.png
 /*.mov
 /*.mp4

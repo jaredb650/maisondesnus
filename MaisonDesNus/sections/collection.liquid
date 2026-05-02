@@ -4,7 +4,10 @@
   <div class="filter-bar" data-filter-bar>
     <form class="filter-bar__filters" method="get">
       <span class="filter-bar__label">Filter:</span>
+      {%- assign rendered_filter_keys = '' -%}
       {%- for filter in collection.filters -%}
+        {%- assign filter_key = filter.label | downcase -%}
+        {%- assign rendered_filter_keys = rendered_filter_keys | append: '|' | append: filter_key | append: '|' -%}
         <details class="filter-dropdown" data-filter-dropdown>
           <summary class="filter-dropdown__summary">
             <span>{{ filter.label }}</span>
@@ -35,6 +38,22 @@
             {%- endcase -%}
           </div>
         </details>
+      {%- endfor -%}
+      {%- assign preview_filters = 'Size,Colour,Price,Fabric,Occasion,Availability' | split: ',' -%}
+      {%- for preview_filter in preview_filters -%}
+        {%- assign preview_key = preview_filter | downcase -%}
+        {%- assign preview_token = '|' | append: preview_key | append: '|' -%}
+        {%- unless rendered_filter_keys contains preview_token -%}
+          <details class="filter-dropdown filter-dropdown--preview" data-filter-dropdown>
+            <summary class="filter-dropdown__summary">
+              <span>{{ preview_filter }}</span>
+              <span class="caret" aria-hidden="true">⌄</span>
+            </summary>
+            <div class="filter-dropdown__panel">
+              <p class="filter-option__empty">Configure {{ preview_filter | downcase }} filters in Shopify Search &amp; Discovery.</p>
+            </div>
+          </details>
+        {%- endunless -%}
       {%- endfor -%}
     </form>
 
@@ -77,7 +96,7 @@
     {%- else -%}
       <div class="product-grid__empty">
         <p class="font-italic">Nothing here.</p>
-        <p>Try a different filter, or <a href="/collections/all" class="link-underline">browse everything</a>.</p>
+        <p>Try a different filter, or <a href="{{ routes.all_products_collection_url }}" class="link-underline">browse everything</a>.</p>
       </div>
     {%- endif -%}
   </div>
@@ -102,8 +121,9 @@
     align-items: center;
     justify-content: space-between;
     gap: 32px;
-    padding: 18px var(--page-margin);
-    border-bottom: 1px solid var(--color-border);
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 18px var(--page-margin) 28px;
     font-family: var(--font-nav);
     font-size: var(--fs-nav);
     letter-spacing: var(--ls-nav);
@@ -113,7 +133,7 @@
   .filter-bar__filters {
     display: flex;
     align-items: center;
-    gap: 24px;
+    gap: clamp(20px, 3vw, 38px);
     flex-wrap: wrap;
   }
   .filter-bar__label {
@@ -192,6 +212,11 @@
     text-decoration: line-through;
   }
   .filter-option__count { color: var(--color-muted); }
+  .filter-option__empty {
+    max-width: 22ch;
+    color: var(--color-muted);
+    line-height: 1.35;
+  }
 
   .filter-price {
     display: flex;
@@ -222,7 +247,9 @@
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    padding: 14px var(--page-margin);
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 var(--page-margin) 18px;
     font-family: var(--font-nav);
     font-size: var(--fs-nav);
     letter-spacing: var(--ls-nav);
@@ -246,8 +273,11 @@
   .product-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: var(--grid-gap);
-    padding: 0;
+    gap: 4px;
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 var(--page-margin);
   }
   .product-grid__empty {
     grid-column: 1 / -1;
@@ -269,7 +299,10 @@
   }
 
   @media (max-width: 899px) {
-    .product-grid { grid-template-columns: repeat(2, 1fr); }
+    .product-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 3px;
+    }
     .filter-bar {
       flex-direction: column;
       align-items: flex-start;
