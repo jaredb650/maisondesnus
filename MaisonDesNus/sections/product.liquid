@@ -73,18 +73,17 @@
           >
         {%- endfor -%}
       {%- endif -%}
-      {%- if product.images.size < 5 -%}
-        {%- for i in (1..5) -%}
-          <img
-            src="{{ 'product-' | append: i | append: '.png' | asset_url }}"
-            data-zoom-src="{{ 'product-' | append: i | append: '.png' | asset_url }}"
-            data-zoom-image
-            class="product-page__gallery-image"
-            loading="lazy"
-            alt="{{ product.title | escape }}"
-            width="900" height="1125"
-          >
-        {%- endfor -%}
+      {%- if product.images.size == 0 -%}
+        <img
+          src="{{ 'product-1.png' | asset_url }}"
+          data-zoom-src="{{ 'product-1.png' | asset_url }}"
+          data-zoom-image
+          class="product-page__gallery-image"
+          loading="eager"
+          fetchpriority="high"
+          alt="{{ product.title | escape }}"
+          width="900" height="1125"
+        >
       {%- endif -%}
     </div>
 
@@ -190,33 +189,6 @@
             </details>
           </div>
         </div>
-
-        {%- if section.settings.show_recommendations -%}
-          {%- assign rec_collection = product.collections.first -%}
-          {%- if rec_collection -%}
-            <div class="info-row info-row--styled-with">
-              <span class="info-row__label">Styled With</span>
-              <div class="info-row__value styled-with-grid">
-                {%- assign rec_count = 0 -%}
-                {%- for rec in rec_collection.products -%}
-                  {%- if rec.id != product.id and rec_count < 2 -%}
-                    <a href="{{ rec.url }}" class="styled-with-card">
-                      {%- if rec.featured_image -%}
-                        {{ rec.featured_image | image_url: width: 400 | image_tag:
-                            widths: '200,300,400',
-                            sizes: '180px',
-                            loading: 'lazy',
-                            alt: rec.title | escape }}
-                      {%- endif -%}
-                      <span class="styled-with-card__title font-italic">{{ rec.title }}</span>
-                    </a>
-                    {%- assign rec_count = rec_count | plus: 1 -%}
-                  {%- endif -%}
-                {%- endfor -%}
-              </div>
-            </div>
-          {%- endif -%}
-        {%- endif -%}
       </div>
     </aside>
   </div>
@@ -288,7 +260,7 @@
 {% stylesheet %}
   .product-page {
     width: 100%;
-    max-width: 1280px;
+    max-width: 1360px;
     margin: 0 auto;
     padding: 24px var(--page-margin) 96px;
   }
@@ -305,9 +277,9 @@
 
   .product-page__grid {
     display: grid;
-    grid-template-columns: minmax(210px, 0.85fr) minmax(320px, 1fr) minmax(280px, 0.9fr);
+    grid-template-columns: minmax(190px, 0.78fr) minmax(300px, 1fr) minmax(270px, 0.88fr);
     align-items: start;
-    gap: clamp(24px, 3.4vw, 44px);
+    gap: clamp(20px, 3.2vw, 56px);
   }
   .product-page__col {
     min-width: 0;
@@ -324,10 +296,10 @@
   /* ---- Labeled row pattern ---- */
   .info-row {
     display: grid;
-    grid-template-columns: 72px 1fr;
-    gap: 14px;
+    grid-template-columns: clamp(62px, 5.2vw, 76px) 1fr;
+    gap: clamp(10px, 1.2vw, 18px);
     align-items: start;
-    padding: 8px 0;
+    padding: 8px 0 18px;
   }
   .info-row__label {
     font-family: var(--font-nav);
@@ -343,8 +315,8 @@
     line-height: var(--lh-body);
   }
   .product-page__side-image {
-    width: min(72%, 260px);
-    margin: 20px 0 0 86px;
+    width: min(76%, 260px);
+    margin: 14px 0 0 clamp(72px, 6.4vw, 94px);
   }
   .product-page__side-image img {
     width: 100%;
@@ -355,7 +327,7 @@
 
   /* ---- Center column ---- */
   .product-page__gallery-image {
-    width: min(100%, 392px);
+    width: min(100%, 444px);
     margin: 0 auto;
     aspect-ratio: 4 / 5;
     object-fit: cover;
@@ -368,7 +340,7 @@
 
   /* ---- Right column ---- */
   .product-page__title {
-    font-size: clamp(22px, 2.5vw, 34px);
+    font-size: clamp(26px, 2.55vw, 38px);
     line-height: 1.1;
   }
   .product-page__description p + p { margin-top: 8px; }
@@ -470,31 +442,9 @@
   }
   .product-page__details-body p + p { margin-top: 6px; }
 
-  /* ---- Styled With ---- */
-  .info-row--styled-with { align-items: start; }
-  .styled-with-grid {
-    display: flex;
-    gap: 12px;
-  }
-  .styled-with-card {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    flex: 1;
-  }
-  .styled-with-card img {
-    width: 100%;
-    aspect-ratio: 4 / 5;
-    object-fit: cover;
-    background: var(--color-background-alt);
-  }
-  .styled-with-card__title {
-    font-size: 12px;
-  }
-
   /* ---- You May Also Like ---- */
   .product-related {
-    max-width: 1280px;
+    max-width: 1360px;
     margin: 0 auto;
     padding: 64px var(--page-margin) 48px;
   }
@@ -542,33 +492,74 @@
   }
 
   /* ---- Responsive ---- */
-  @media (max-width: 1023px) {
+  @media (max-width: 1199px) and (min-width: 750px) {
+    .product-page__grid {
+      grid-template-columns: minmax(170px, 0.7fr) minmax(280px, 1fr) minmax(250px, 0.82fr);
+      gap: clamp(16px, 2.2vw, 28px);
+    }
+    .product-page__breadcrumbs { padding-bottom: 24px; }
+    .product-page__title { font-size: clamp(25px, 3.3vw, 34px); }
+    .product-page__gallery-image { width: min(100%, 330px); }
+    .product-page__side-image {
+      width: min(82%, 210px);
+      margin-left: clamp(66px, 6.2vw, 86px);
+    }
+    .info-row {
+      grid-template-columns: clamp(58px, 6vw, 72px) 1fr;
+      gap: 10px;
+    }
+  }
+  @media (max-width: 749px) {
+    .product-page {
+      padding: 22px var(--page-margin) 72px;
+      max-width: none;
+    }
+    .product-page__breadcrumbs {
+      padding-bottom: 22px;
+      font-size: 9px;
+    }
     .product-page__grid {
       display: flex;
-      flex-flow: row wrap;
+      flex-direction: column;
       gap: 0;
     }
-    .product-page__col {
-      flex: 0 0 100%;
-      max-width: 100%;
-      padding: 0;
+    .product-page__col--center {
+      order: 1;
+      display: flex;
+      flex-direction: row;
+      gap: 0;
+      margin: 0 calc(-1 * var(--page-margin)) 28px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
     }
+    .product-page__col--center::-webkit-scrollbar { display: none; }
+    .product-page__col--right { order: 2; margin-bottom: 22px; }
     .product-page__col--left { order: 3; }
-    .product-page__col--center { order: 1; margin-bottom: 24px; }
-    .product-page__col--right { order: 2; margin-bottom: 24px; }
     .product-page__sticky { position: static; }
-    .product-page__side-image { width: min(46%, 220px); margin-left: 90px; }
-    .product-page__gallery-image { width: min(100%, 520px); }
-  }
-  @media (max-width: 899px) {
-    .info-row { grid-template-columns: 90px 1fr; gap: 12px; }
+    .product-page__gallery-image {
+      flex: 0 0 100%;
+      width: 100%;
+      margin: 0;
+      aspect-ratio: 4 / 5.35;
+      scroll-snap-align: start;
+    }
+    .product-page__title {
+      font-size: clamp(28px, 10vw, 38px);
+      max-width: 10ch;
+    }
+    .product-page__side-image {
+      display: none;
+    }
+    .product-page__col--left .info-row {
+      padding-bottom: 16px;
+    }
   }
   @media (max-width: 599px) {
     .info-row {
-      grid-template-columns: 1fr;
-      gap: 4px;
+      grid-template-columns: 82px 1fr;
+      gap: 10px;
     }
-    .product-page__title { font-size: 18px; }
   }
 {% endstylesheet %}
 
@@ -576,7 +567,6 @@
 {
   "name": "Product",
   "settings": [
-    { "type": "checkbox", "id": "show_recommendations", "label": "Show Styled With (inline cross-sell)", "default": true },
     { "type": "checkbox", "id": "show_related", "label": "Show You Might Also Like", "default": true },
     { "type": "checkbox", "id": "show_reviews", "label": "Show Reviews section", "default": false, "info": "Enable once a reviews app is connected." }
   ],

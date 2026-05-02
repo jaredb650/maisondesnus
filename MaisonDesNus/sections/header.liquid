@@ -235,6 +235,29 @@
     .site-header__logo-wordmark { font-size: 24px; }
     .site-header__logo-tag { font-size: 9px; margin-top: 3px; }
   }
+  @media (min-width: 900px) and (max-width: 1199px) {
+    .site-header__inner {
+      gap: 10px;
+      padding: 0 20px;
+    }
+    .site-header__nav {
+      gap: clamp(24px, 3.4vw, 42px);
+    }
+    .site-header__actions--desktop {
+      gap: 12px;
+    }
+    .site-header__signin {
+      position: absolute;
+      left: 20px;
+      top: calc(50% + 18px);
+    }
+    .site-header__search {
+      min-width: 180px;
+      max-width: 220px;
+      padding-left: 14px;
+    }
+    .site-header__logo-wordmark { font-size: 22px; }
+  }
   .mobile-menu__logo-image {
     height: 22px;
     width: auto;
